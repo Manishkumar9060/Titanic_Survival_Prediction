@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Survival Prediction</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)),
+                url('https://cdn-s-www.leprogres.fr/images/27D4CF66-16A2-4C0C-A2DD-72BC6AF47D38/NW_raw/le-naufrage-du-titanic-reconstitue-pour-le-projet-quot-titanic-honour-and-glory-quot-dr-1562590772.jpg') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: transparent;
+            /* Fully transparent */
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 16px;
+            box-shadow: none;
+            /* No shadow */
+        }
+
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #c1d3e8;
+            font-size: 24px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: 600;
+            color: #c8c1c1;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #484444;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: #614d4d;
+            color: rgb(243, 156, 156);
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2b5f37;
+        }
+
+        .result {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #bbd6ea;
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>🚢 Titanic Survival Prediction</h2>
+
+        <!-- Prediction form -->
+        <form method="POST" action="/predict" id="predictionForm">
+            <label for="pclass">Pclass (1, 2, or 3)</label>
+            <input type="number" name="pclass" id="pclass" min="1" max="3" required
+                value="{{ pclass_value if pclass_value is defined else '' }}">
+
+            <label for="sex">Gender</label>
+            <select name="sex" id="sex" required>
+                <option value="">--Select--</option>
+                <option value="male" {% if sex_value=='male' %}selected{% endif %}>Male</option>
+                <option value="female" {% if sex_value=='female' %}selected{% endif %}>Female</option>
+            </select>
+
+            <label for="fare">Fare</label>
+            <input type="number" name="fare" id="fare" step="any" required
+                value="{{ fare_value if fare_value is defined else '' }}">
+
+            <button type="submit">Predict</button>
+        </form>
+
+        {% if prediction_text %}
+        <div class="result" id="predictionResult">{{ prediction_text }}</div>
+        {% endif %}
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // If this is a reload, clear form & prediction
+                if (performance.getEntriesByType("navigation")[0].type === "reload") {
+                    document.getElementById("pclass").value = "";
+                    document.getElementById("sex").value = "";
+                    document.getElementById("fare").value = "";
+                    let predictionDiv = document.getElementById("predictionResult");
+                    if (predictionDiv) predictionDiv.innerText = "";
+                }
+            });
+        </script>
+
+    </Div>
+</body>
+
+</html>
